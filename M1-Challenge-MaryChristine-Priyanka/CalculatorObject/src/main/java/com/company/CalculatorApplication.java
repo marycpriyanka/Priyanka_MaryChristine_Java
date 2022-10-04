@@ -1,7 +1,9 @@
 package com.company;
 
 public class CalculatorApplication {
+
     public static void main(String[] args) {
+
         System.out.println("1 + 1 = " + Calculator.add(1, 1));
         System.out.println("23 - 52 = " + Calculator.subtract(23, 52));
         System.out.println("34 * 2 = " + Calculator.multiply(34, 2));
