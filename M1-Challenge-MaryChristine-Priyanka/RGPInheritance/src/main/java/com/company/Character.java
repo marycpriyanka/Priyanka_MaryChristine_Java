@@ -22,7 +22,8 @@ public class Character {
     }
 
     /**
-     * Method to attack another character
+     * Method to attack another character. Attacking character's strength is increased by their attack power.
+     * Attacked character's strength is decreased by attacking character's strength
      * @param character - character attacked
      */
     public void attackAnotherCharacter(Character character) {
