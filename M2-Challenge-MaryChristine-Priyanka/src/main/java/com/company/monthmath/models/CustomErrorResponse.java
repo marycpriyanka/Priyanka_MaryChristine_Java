@@ -16,6 +16,7 @@ public class CustomErrorResponse {
     public CustomErrorResponse(String errorCode, String errorMsg) {
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
+        this.timestamp = LocalDateTime.now();
     }
 
     public String getErrorMsg() {
