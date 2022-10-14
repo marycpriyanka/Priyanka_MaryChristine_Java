@@ -48,7 +48,8 @@ public class MathSolutionControllerTest {
                 .andExpect(jsonPath("$.operation").value("add"))
                 .andExpect(jsonPath("$.operand1").value(5))
                 .andExpect(jsonPath("$.operand2").value(3))
-                .andExpect(jsonPath("$.answer").value(8));
+                .andExpect(jsonPath("$.answer").value(8))
+                .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
     /**
@@ -133,7 +134,8 @@ public class MathSolutionControllerTest {
                 .andExpect(jsonPath("$.operation").value("subtract"))
                 .andExpect(jsonPath("$.operand1").value(5))
                 .andExpect(jsonPath("$.operand2").value(3))
-                .andExpect(jsonPath("$.answer").value(2));
+                .andExpect(jsonPath("$.answer").value(2))
+                .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
     /**
@@ -215,7 +217,8 @@ public class MathSolutionControllerTest {
                 .andExpect(jsonPath("$.operation").value("multiply"))
                 .andExpect(jsonPath("$.operand1").value(5))
                 .andExpect(jsonPath("$.operand2").value(3))
-                .andExpect(jsonPath("$.answer").value(15));
+                .andExpect(jsonPath("$.answer").value(15))
+                .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
     /**
@@ -296,7 +299,8 @@ public class MathSolutionControllerTest {
                 .andExpect(jsonPath("$.operation").value("divide"))
                 .andExpect(jsonPath("$.operand1").value(5))
                 .andExpect(jsonPath("$.operand2").value(1))
-                .andExpect(jsonPath("$.answer").value(5));
+                .andExpect(jsonPath("$.answer").value(5))
+                .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
     /**
@@ -358,5 +362,4 @@ public class MathSolutionControllerTest {
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
-
 }
