@@ -57,7 +57,7 @@ public class MathSolutionControllerTest {
      * @throws Exception
      */
     @Test
-    public void shouldReturnErrorWhenOperand1MissingOnAdd() throws Exception {
+    public void shouldReturnErrorWhenOperandsMissingOnAdd() throws Exception {
         // Operand 1 missing
         MathSolution inputMath = new MathSolution();
         inputMath.setOperand2(5);
@@ -143,7 +143,7 @@ public class MathSolutionControllerTest {
      * @throws Exception
      */
     @Test
-    public void shouldReturnErrorWhenOperand1MissingOnSubtract() throws Exception {
+    public void shouldReturnErrorWhenOperandsMissingOnSubtract() throws Exception {
         // Operand 1 missing
         MathSolution inputMath = new MathSolution();
         inputMath.setOperand2(5);
@@ -226,7 +226,7 @@ public class MathSolutionControllerTest {
      * @throws Exception
      */
     @Test
-    public void shouldReturnErrorWhenOperand1MissingOnMultiply() throws Exception {
+    public void shouldReturnErrorWhenOperandsMissingOnMultiply() throws Exception {
         // Operand 1 missing
         MathSolution inputMath = new MathSolution();
         inputMath.setOperand2(5);
@@ -308,7 +308,7 @@ public class MathSolutionControllerTest {
      * @throws Exception
      */
     @Test
-    public void shouldReturnErrorWhenOperand1MissingOnDivide() throws Exception {
+    public void shouldReturnErrorWhenOperandsMissingOnDivide() throws Exception {
         // Operand 1 missing
         MathSolution inputMath = new MathSolution();
         inputMath.setOperand2(5);
@@ -358,6 +358,28 @@ public class MathSolutionControllerTest {
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
+
+    @Test
+    public void shouldReturnErrorWhenOperand2IsZeroOnDivide() throws Exception {
+        // Operand 2 is zero
+        MathSolution inputMath = new MathSolution();
+        inputMath.setOperand1(5);
+        inputMath.setOperand2(0);
+
+        // Convert Java object to JSON
+        String inputJson = mapper.writeValueAsString(inputMath);
+
+        mockMvc.perform(post("/divide")
+                        .content(inputJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.errorMsg").value("Operand 2 is zero"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());

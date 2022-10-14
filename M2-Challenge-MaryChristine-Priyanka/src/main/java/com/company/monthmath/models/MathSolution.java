@@ -7,11 +7,9 @@ import java.util.Objects;
 
 public class MathSolution {
     private Integer operand1;
-
     private Integer operand2;
     private String operation;
     private int answer;
-
     private int id;
 
     public MathSolution() {}

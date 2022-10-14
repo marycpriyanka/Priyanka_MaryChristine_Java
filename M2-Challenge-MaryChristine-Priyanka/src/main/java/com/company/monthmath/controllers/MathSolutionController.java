@@ -57,6 +57,10 @@ public class MathSolutionController {
             throw new IllegalArgumentException("Missing operands");
         }
 
+        if (mathSolution.getOperand2() == 0) {
+            throw new IllegalArgumentException("Operand 2 is zero");
+        }
+
         mathSolution.setId(mathId++);
         mathSolution.setOperation("divide");
         mathSolution.setAnswer(mathSolution.getOperand1() / mathSolution.getOperand2());
