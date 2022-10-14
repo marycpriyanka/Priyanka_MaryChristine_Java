@@ -2,6 +2,7 @@ package com.company.monthmath.controllers;
 
 import com.company.monthmath.models.MathSolution;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,10 +25,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MathSolutionControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    private int id = 1;
 
     // Object mapper used to convert Java objects to JSON and vice versa
     private ObjectMapper mapper = new ObjectMapper();
+
+    private String inputJson;
+    private String mapJson;
+    @Before
+    public void setUp() throws  Exception{
+        // Input to be used for all tests with valid inputs
+        MathSolution inputMath = new MathSolution();
+        inputMath.setOperand1(6);
+        inputMath.setOperand2(3);
+
+        // Convert Java object to JSON
+        inputJson = mapper.writeValueAsString(inputMath);
+
+        // Input to be used when 2 strings are passed instead of numbers (invalid input)
+        Map<String, String> inputMap = new HashMap<>();
+        inputMap.put("operand1", "stringValue");
+        inputMap.put("operand2", "anotherString");
+
+        mapJson = mapper.writeValueAsString(inputMap);
+    }
 
     /**
      * Tests the endpoint "/add" for adding 2 numbers
@@ -32,13 +55,6 @@ public class MathSolutionControllerTest {
      */
     @Test
     public void shouldAddTwoNumbers() throws Exception {
-        MathSolution inputMath = new MathSolution();
-        inputMath.setOperand1(5);
-        inputMath.setOperand2(3);
-
-        // Convert Java object to JSON
-        String inputJson = mapper.writeValueAsString(inputMath);
-
         mockMvc.perform(post("/add")
                 .content(inputJson)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -46,9 +62,9 @@ public class MathSolutionControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.operation").value("add"))
-                .andExpect(jsonPath("$.operand1").value(5))
+                .andExpect(jsonPath("$.operand1").value(6))
                 .andExpect(jsonPath("$.operand2").value(3))
-                .andExpect(jsonPath("$.answer").value(8))
+                .andExpect(jsonPath("$.answer").value(9))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -70,7 +86,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -88,7 +104,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -105,8 +121,31 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
+
+    /**
+     * Tests the endpoint "/add" when operands are not numbers
+     * @throws Exception
+     */
+    @Test
+    public void shouldReturnErrorWhenOperandsAreNotNumbersOnAdd() throws Exception {
+//        Map<String, String> inputMap = new HashMap<>();
+//        inputMap.put("operand1", "stringValue");
+//        inputMap.put("operand2", "anotherString");
+//        String mapJson = mapper.writeValueAsString(inputMap);
+
+        mockMvc.perform(post("/add")
+                        .content(mapJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errorMsg").value("Operands should be both numbers"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
@@ -118,13 +157,6 @@ public class MathSolutionControllerTest {
      */
     @Test
     public void shouldSubtractTwoNumbers() throws Exception {
-        MathSolution inputMath = new MathSolution();
-        inputMath.setOperand1(5);
-        inputMath.setOperand2(3);
-
-        // Convert Java object to JSON
-        String inputJson = mapper.writeValueAsString(inputMath);
-
         mockMvc.perform(post("/subtract")
                         .content(inputJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -132,9 +164,9 @@ public class MathSolutionControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.operation").value("subtract"))
-                .andExpect(jsonPath("$.operand1").value(5))
+                .andExpect(jsonPath("$.operand1").value(6))
                 .andExpect(jsonPath("$.operand2").value(3))
-                .andExpect(jsonPath("$.answer").value(2))
+                .andExpect(jsonPath("$.answer").value(3))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -156,7 +188,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -174,7 +206,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -191,23 +223,38 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 
+    /**
+     * Tests the endpoint "/subtract" when operands are not numbers
+     * @throws Exception
+     */
+    @Test
+    public void shouldReturnErrorWhenOperandsAreNotNumbersOnSubtract() throws Exception {
+//        Map<String, String> inputMap = new HashMap<>();
+//        inputMap.put("operand1", "stringValue");
+//        inputMap.put("operand2", "anotherString");
+//        String mapJson = mapper.writeValueAsString(inputMap);
+
+        mockMvc.perform(post("/subtract")
+                        .content(mapJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errorMsg").value("Operands should be both numbers"))
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
 
     @Test
     public void shouldMultiplyTwoNumbers() throws Exception {
-        MathSolution inputMath = new MathSolution();
-        inputMath.setOperand1(5);
-        inputMath.setOperand2(3);
-
-        // Convert Java object to JSON
-        String inputJson = mapper.writeValueAsString(inputMath);
-
         mockMvc.perform(post("/multiply")
                         .content(inputJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -215,9 +262,9 @@ public class MathSolutionControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.operation").value("multiply"))
-                .andExpect(jsonPath("$.operand1").value(5))
+                .andExpect(jsonPath("$.operand1").value(6))
                 .andExpect(jsonPath("$.operand2").value(3))
-                .andExpect(jsonPath("$.answer").value(15))
+                .andExpect(jsonPath("$.answer").value(18))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -239,7 +286,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -257,7 +304,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -274,8 +321,31 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
+
+    /**
+     * Tests the endpoint "/multiply" when operands are not numbers
+     * @throws Exception
+     */
+    @Test
+    public void shouldReturnErrorWhenOperandsAreNotNumbersOnMultiply() throws Exception {
+//        Map<String, String> inputMap = new HashMap<>();
+//        inputMap.put("operand1", "stringValue");
+//        inputMap.put("operand2", "anotherString");
+//        String mapJson = mapper.writeValueAsString(inputMap);
+
+        mockMvc.perform(post("/multiply")
+                        .content(mapJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errorMsg").value("Operands should be both numbers"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
@@ -283,13 +353,6 @@ public class MathSolutionControllerTest {
 
     @Test
     public void shouldDivideTwoNumbers() throws Exception {
-        MathSolution inputMath = new MathSolution();
-        inputMath.setOperand1(5);
-        inputMath.setOperand2(1);
-
-        // Convert Java object to JSON
-        String inputJson = mapper.writeValueAsString(inputMath);
-
         mockMvc.perform(post("/divide")
                         .content(inputJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -297,9 +360,9 @@ public class MathSolutionControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.operation").value("divide"))
-                .andExpect(jsonPath("$.operand1").value(5))
-                .andExpect(jsonPath("$.operand2").value(1))
-                .andExpect(jsonPath("$.answer").value(5))
+                .andExpect(jsonPath("$.operand1").value(6))
+                .andExpect(jsonPath("$.operand2").value(3))
+                .andExpect(jsonPath("$.answer").value(2))
                 .andExpect(jsonPath("$.id").isNotEmpty());
     }
 
@@ -321,7 +384,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -339,7 +402,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -356,7 +419,7 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Missing operands"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
@@ -378,8 +441,31 @@ public class MathSolutionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorMsg").value("Operand 2 is zero"))
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
+
+    /**
+     * Tests the endpoint "/divide" when operands are not numbers
+     * @throws Exception
+     */
+    @Test
+    public void shouldReturnErrorWhenOperandsAreNotNumbersOnDivide() throws Exception {
+//        Map<String, String> inputMap = new HashMap<>();
+//        inputMap.put("operand1", "stringValue");
+//        inputMap.put("operand2", "anotherString");
+//        String mapJson = mapper.writeValueAsString(inputMap);
+
+        mockMvc.perform(post("/divide")
+                        .content(mapJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.errorMsg").value("Operands should be both numbers"))
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.errorCode").value("422 UNPROCESSABLE_ENTITY"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
