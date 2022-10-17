@@ -134,11 +134,6 @@ public class MathSolutionControllerTest {
      */
     @Test
     public void shouldReturnErrorWhenOperandsAreNotNumbersOnAdd() throws Exception {
-//        Map<String, String> inputMap = new HashMap<>();
-//        inputMap.put("operand1", "stringValue");
-//        inputMap.put("operand2", "anotherString");
-//        String mapJson = mapper.writeValueAsString(inputMap);
-
         mockMvc.perform(post("/add")
                         .content(mapJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -236,11 +231,6 @@ public class MathSolutionControllerTest {
      */
     @Test
     public void shouldReturnErrorWhenOperandsAreNotNumbersOnSubtract() throws Exception {
-//        Map<String, String> inputMap = new HashMap<>();
-//        inputMap.put("operand1", "stringValue");
-//        inputMap.put("operand2", "anotherString");
-//        String mapJson = mapper.writeValueAsString(inputMap);
-
         mockMvc.perform(post("/subtract")
                         .content(mapJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -334,11 +324,6 @@ public class MathSolutionControllerTest {
      */
     @Test
     public void shouldReturnErrorWhenOperandsAreNotNumbersOnMultiply() throws Exception {
-//        Map<String, String> inputMap = new HashMap<>();
-//        inputMap.put("operand1", "stringValue");
-//        inputMap.put("operand2", "anotherString");
-//        String mapJson = mapper.writeValueAsString(inputMap);
-
         mockMvc.perform(post("/multiply")
                         .content(mapJson)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -454,11 +439,6 @@ public class MathSolutionControllerTest {
      */
     @Test
     public void shouldReturnErrorWhenOperandsAreNotNumbersOnDivide() throws Exception {
-//        Map<String, String> inputMap = new HashMap<>();
-//        inputMap.put("operand1", "stringValue");
-//        inputMap.put("operand2", "anotherString");
-//        String mapJson = mapper.writeValueAsString(inputMap);
-
         mockMvc.perform(post("/divide")
                         .content(mapJson)
                         .contentType(MediaType.APPLICATION_JSON)
