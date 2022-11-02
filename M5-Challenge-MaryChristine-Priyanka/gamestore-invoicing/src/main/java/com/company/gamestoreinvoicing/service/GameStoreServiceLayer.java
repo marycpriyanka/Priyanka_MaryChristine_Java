@@ -64,7 +64,7 @@ public class GameStoreServiceLayer {
         //Check if we have enough quantity
         if (invoiceViewModel.getItemType().equals(CONSOLE_ITEM_TYPE)) {
             Console tempCon = null;
-            Optional<Console> returnVal = catalogApi.getConsoleById(invoiceViewModel.getItemId());
+            Optional<Console> returnVal = Optional.ofNullable(catalogApi.findConsoleById(invoiceViewModel.getItemId()));
 
             if (returnVal.isPresent()) {
                 tempCon = returnVal.get();
@@ -80,7 +80,7 @@ public class GameStoreServiceLayer {
 
         } else if (invoiceViewModel.getItemType().equals(GAME_ITEM_TYPE)) {
             Game tempGame = null;
-            Optional<Game> returnVal = gameRepo.findById(invoiceViewModel.getItemId());
+                Optional<Game> returnVal = Optional.ofNullable(catalogApi.findGameById(invoiceViewModel.getItemId()));
 
             if (returnVal.isPresent()) {
                 tempGame = returnVal.get();
@@ -95,7 +95,7 @@ public class GameStoreServiceLayer {
 
         } else if (invoiceViewModel.getItemType().equals(TSHIRT_ITEM_TYPE)) {
             TShirt tempTShirt = null;
-            Optional<TShirt> returnVal = tShirtRepo.findById(invoiceViewModel.getItemId());
+            Optional<TShirt> returnVal = Optional.ofNullable(catalogApi.findTshirtById(invoiceViewModel.getItemId()));
 
             if (returnVal.isPresent()) {
                 tempTShirt = returnVal.get();

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Console implements Serializable {
+public class Console {
     private long id;
     private String model;
     private String manufacturer;
