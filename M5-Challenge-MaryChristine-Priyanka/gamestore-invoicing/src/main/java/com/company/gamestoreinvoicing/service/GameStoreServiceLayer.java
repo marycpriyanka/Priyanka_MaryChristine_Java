@@ -29,10 +29,11 @@ public class GameStoreServiceLayer {
     ProcessingFeeRepository processingFeeRepo;
 
     @Autowired
-    public GameStoreServiceLayer(InvoiceRepository invoiceRepo, TaxRepository taxRepo, ProcessingFeeRepository processingFeeRepo) {
+    public GameStoreServiceLayer(InvoiceRepository invoiceRepo, TaxRepository taxRepo, ProcessingFeeRepository processingFeeRepo, CatalogFeignClient catalogApi) {
         this.invoiceRepo = invoiceRepo;
         this.taxRepo = taxRepo;
         this.processingFeeRepo = processingFeeRepo;
+        this.catalogApi = catalogApi;
     }
 
     public InvoiceViewModel createInvoice(InvoiceViewModel invoiceViewModel) {

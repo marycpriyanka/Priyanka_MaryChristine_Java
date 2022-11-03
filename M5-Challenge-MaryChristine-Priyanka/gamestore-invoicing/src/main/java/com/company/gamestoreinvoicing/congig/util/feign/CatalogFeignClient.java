@@ -5,6 +5,7 @@ import com.company.gamestoreinvoicing.model.Game;
 import com.company.gamestoreinvoicing.model.TShirt;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,4 +19,7 @@ public interface CatalogFeignClient {
 
     @RequestMapping(value = "/tshirt/{id}", method = RequestMethod.GET)
     public TShirt findTshirtById(@PathVariable long id);
+
+    @RequestMapping(value = "/tshirt", method = RequestMethod.POST)
+    public TShirt createTshirt(@RequestBody TShirt tShirt);
 }
